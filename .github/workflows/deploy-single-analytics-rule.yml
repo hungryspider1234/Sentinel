@@ -32,5 +32,5 @@ jobs:
           az deployment group create \
             --subscription "$AZ_SUBSCRIPTION_ID" \
             --resource-group "$RG_NAME" \
-            --template-file "Analytics Rule/VMStopped.json" \
+            --template-file "analytics-rules/VMStopped.json" \
             --parameters workspaceName="$WORKSPACE_NAME"
