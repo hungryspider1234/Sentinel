@@ -1,11 +1,16 @@
-name: Deploy Single Sentinel Analytics Rule
+name: Deploy VMStopped Analytics Rule
 
 on:
-  workflow_dispatch:   # Manual trigger only
+  workflow_dispatch:
 
 jobs:
   deploy-analytics-rule:
     runs-on: ubuntu-latest
+
+    env:
+      AZ_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      RG_NAME: ${{ secrets.RESOURCE_GROUP }}
+      WORKSPACE_NAME: ${{ secrets.WORKSPACE_NAME }}
 
     steps:
       - name: Checkout repository
@@ -16,14 +21,16 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Confirm Azure login
-        run: az account show
+      - name: Debug – confirm variables (IMPORTANT)
+        run: |
+          echo "Subscription = '$AZ_SUBSCRIPTION_ID'"
+          echo "Resource Group = '$RG_NAME'"
+          echo "Workspace = '$WORKSPACE_NAME'"
 
       - name: Deploy VMStopped Analytics Rule
         run: |
           az deployment group create \
-            --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --subscription "$AZ_SUBSCRIPTION_ID" \
+            --resource-group "$RG_NAME" \
             --template-file "Analytics Rule/VMStopped.json" \
-            --parameters \
-              workspaceName=${{ secrets.WORKSPACE_NAME }}
+            --parameters workspaceName="$WORKSPACE_NAME"
