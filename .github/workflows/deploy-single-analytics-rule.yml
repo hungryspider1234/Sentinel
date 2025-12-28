@@ -33,4 +33,4 @@ jobs:
             --subscription "$AZ_SUBSCRIPTION_ID" \
             --resource-group "$RG_NAME" \
             --template-file "analytics-rules/VMStopped.json" \
-            --parameters workspaceName="$WORKSPACE_NAME"
+            --parameters workspace="$WORKSPACE_NAME"
