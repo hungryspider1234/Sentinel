@@ -1,0 +1,26 @@
+name: Deploy Single Sentinel Analytics Rule
+
+on:
+  workflow_dispatch:   # Manual trigger only
+
+jobs:
+  deploy-analytics-rule:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy VMStopped Analytics Rule
+        run: |
+          az deployment group create \
+            --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --template-file "Analytics Rule/VMStopped.json" \
+            --parameters \
+              workspaceName=${{ secrets.WORKSPACE_NAME }}
